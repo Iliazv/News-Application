@@ -1,0 +1,8 @@
+django>=5.0.1
+Pillow
+djangorestframework
+pyyaml
+requests
+django-cors-headers
+drf-yasg
+setuptools

@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static 'news/style.css' %}">
+    <title>Новости.ru</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <div class="page">
+                <header class="head">
+                    <div class="head__user">
+                        <img src="{% static '../static/news/images/user.png' %}" alt="">
+                    </div>
+                    <div class="head__logo">
+                        <a href="{% url 'new_all' %}">Новости.ru</a>
+                    </div>
+                    <div class="head__search">
+                        <a href="{% url 'statistic_page' %}" class="head__stat">Статистика</a>
+                    </div>
+                </header>
+                <section class="select">
+                    <div class="new-item">
+                        <div class="select__image">
+                            {% if new_item.image %}
+                            <img src="{{ new_item.image.url }}" alt="" class="new__image">
+                            {% else %}
+                            <img src="{% static '../static/news/images/stub.png' %}" alt="" class="new__image">
+                            {% endif %}
+                        </div>
+                        <div class="select__content">
+                            <div class="select__title">{{ new_item.title }}</div>
+                            <div class="select__text">{{ new_item.text }}</div>
+                            <div class="select__tag">Теги: 
+                                {% for tag in new_item.tags.all %}
+                                    {% if forloop.last %}
+                                        {{ tag }}
+                                    {% else %}
+                                        {{ tag }},
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feedback" id="template">
+                        <div>Оцените новость:</div>
+                        <div class="feedback__form">
+                            <input type="hidden" value="{{ new_item.pk }}" id="input-field">
+                            <button class="feedback__button feedback__button_like" id="like-button">
+                                <img src="{% static '../static/news/images/like.png' %}" alt="">
+                            </button> 
+                            <input value="{{ new_item.like_count.count }}" id="value-field-likes" disabled>
+                            <button class="feedback__button feedback__button_dislike" id="dislike-button">
+                                <img src="{% static '../static/news/images/like.png' %}" alt="">
+                            </button>
+                            <input value="{{ new_item.dislike_count.count }}" id="value-field-dislikes" disabled>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    $("#like-button").click(function(event) {
+        event.preventDefault();
+        var primary_key = $('#input-field').val()
+
+        $.ajax({
+            url: "{% url 'submit_like' %}",
+            type: 'POST',
+            dataType: 'json',
+            data: {csrfmiddlewaretoken: "{{ csrf_token }}", 'primary_key': primary_key},
+            success: function(response) {
+                var btn_likes = $('#value-field-likes')
+                var btn_dislikes = $('#value-field-dislikes')
+                btn_likes.val(response.likes)
+                btn_dislikes.val(response.dislikes)
+            }
+        });
+    });
+    
+    $("#dislike-button").click(function(event) {
+        event.preventDefault();
+        var primary_key = $('#input-field').val()
+
+        $.ajax({
+            url: "{% url 'submit_dislike' %}",
+            type: 'POST',
+            dataType: 'json',
+            data: {csrfmiddlewaretoken: "{{ csrf_token }}", 'primary_key': primary_key},
+            success: function(response) {
+                var btn_likes = $('#value-field-likes')
+                var btn_dislikes = $('#value-field-dislikes')
+                btn_likes.val(response.likes)
+                btn_dislikes.val(response.dislikes)
+            }
+        });
+    });
+</script>

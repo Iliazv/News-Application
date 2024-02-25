@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static 'news/style.css' %}">
+    <script src="{% static 'news/script.js' %}"></script>
+    <title>Новости.ru</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <div class="page">
+                <header class="head">
+                    <div class="head__user">
+                        <img src="{% static '../static/news/images/user.png' %}" alt="">
+                    </div>
+                    <div class="head__logo">
+                        <a href="{% url 'new_all' %}">Новости.ru</a>
+                    </div>
+                    <div class="head__search">
+                        <a href="{% url 'statistic_page' %}" class="head__stat">Статистика</a>
+                    </div>
+                </header>
+                <div class="tags">
+                    {% for tag in tags %}
+                        <a href="{% url 'new_find' tag=tag.0 %}" class="tags__link">{{ tag.1 }}</a>
+                    {% endfor %}
+                </div>
+                <section class="news" id="scroll-element">
+                    {% include 'news/posts-new.html' with new_list=new_list %}
+                </section>
+                <div id="bottom-sentinel">
+            </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      let bottomSentinel = document.querySelector("#bottom-sentinel");
+      let scrollElement = document.querySelector("#scroll-element");
+      let baseUrl = "{% url 'new_all' %}";
+      attachInfiniteScroll(bottomSentinel, scrollElement, baseUrl);
+    })
+  </script>

@@ -1,0 +1,14 @@
+{% load static %}
+<article class="new">
+    <a href="{% url 'new_page' pk=new.pk %}">
+        {% if new.image %}
+        <img src="{{ new.image.url }}" alt="" class="new__image">
+        {% else %}
+        <img src="{% static '../static/news/images/stub.png' %}" alt="" class="new__image">
+        {% endif %}
+    </a>
+    <div class="new__title">
+        {{ new.title }}
+        {{ new.tag }}
+    </div>
+</article>

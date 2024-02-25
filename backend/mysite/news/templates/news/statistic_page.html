@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'news/style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>Новости.ru</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <div class="page">
+                <header class="head">
+                    <div class="head__user">
+                        <img src="{% static '../static/news/images/user.png' %}" alt="">
+                    </div>
+                    <div class="head__logo">
+                        <a href="{% url 'new_all' %}">Новости.ru</a>
+                    </div>
+                    <div class="head__search">
+                        <a href="{% url 'statistic_page' %}" class="head__stat">Статистика</a>
+                    </div>
+                </header>
+                <section class="select">
+                    <div class="new-item">
+                        <div class="select__content">
+                            {% for new in new_list %}
+                            <div class="select__column">
+                                <div class="select__new">
+                                    <a href="{% url 'new_page' pk=new.pk %}">
+                                        {% if new.image %}
+                                        <img src="{{ new.image.url }}" alt="" class="select__thumb">
+                                        {% else %}
+                                        <img src="{% static '../static/news/images/stub.png' %}" alt="" class="select__thumb">
+                                        {% endif %}
+                                    </a>
+                                    <span>{{ new.title }}</span>
+                                </div>
+                                <div class="select__stat">
+                                    <div class="select__number">Новость #{{ forloop.counter }}</div>
+                                    <img src="{% static '../static/news/images/eye.png' %}" alt=""> Просмотры - {{ new.view_count }}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
